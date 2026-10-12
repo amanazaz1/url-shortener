@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: urlshortener
+  datasource:
+    url: jdbc:h2:file:./data/urlshortener;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  jpa:
+    open-in-view: false          # no DB session leaking into the web layer
+    hibernate:
+      ddl-auto: update           # demo only; use Flyway/Liquibase migrations in production
+  h2:
+    console:
+      enabled: false
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=10m
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  health:
+    redis:
+      enabled: false             # Redis is optional (see application-redis.yml)
+
+app:
+  base-url: http://localhost:8080
+  code-length: 7
+  max-url-length: 2048
+  rate-limit-per-minute: 60
+  allow-private-hosts: false
